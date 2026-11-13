@@ -20,7 +20,10 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 API = "https://graph.instagram.com/v21.0"
-TOKEN = os.environ["IG_TOKEN"].strip()
+TOKEN = os.environ.get("IG_TOKEN", "").strip()
+if not TOKEN:
+    print("Secret IG_TOKEN absent : rien à faire tant qu'il n'est pas ajouté.")
+    sys.exit(0)
 USER = os.environ.get("IG_USER_ID", "me").strip() or "me"
 BASE = os.environ["MEDIA_BASE"].rstrip("/")
 MODE = os.environ.get("MODE", "publish")
