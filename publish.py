@@ -19,12 +19,14 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
-API = "https://graph.instagram.com/v21.0"
 TOKEN = os.environ.get("IG_TOKEN", "").strip()
 if not TOKEN:
     print("Secret IG_TOKEN absent : rien à faire tant qu'il n'est pas ajouté.")
     sys.exit(0)
-USER = os.environ.get("IG_USER_ID", "me").strip() or "me"
+# Jeton « Instagram login » (IGAA…) → graph.instagram.com ; jeton Facebook / utilisateur système → graph.facebook.com
+API = ("https://graph.instagram.com/v21.0" if TOKEN.startswith("IG")
+       else "https://graph.facebook.com/v21.0")
+USER = os.environ.get("IG_USER_ID", "").strip() or "me"
 BASE = os.environ["MEDIA_BASE"].rstrip("/")
 MODE = os.environ.get("MODE", "publish")
 MAX_LATE = timedelta(hours=6)      # au-delà, on ne publie plus et on le signale
