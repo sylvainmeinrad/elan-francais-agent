@@ -107,6 +107,10 @@ def main():
             except Exception as e:
                 print(label, ": ÉCHEC", e); return None
         tryit("Moi", "me", fields="id,name")
+        dbg = tryit("Jeton", "debug_token", input_token=TOKEN)
+        if dbg:
+            exp = dbg.get("data", {}).get("expires_at")
+            print("EXPIRATION :", "jamais" if not exp else datetime.fromtimestamp(exp, timezone.utc).isoformat())
         tryit("Permissions du jeton", "me/permissions")
         tryit("Pages et comptes Instagram liés", "me/accounts", fields="name,id,instagram_business_account{id,username}")
         me = tryit("Compte Instagram (IG_USER_ID)", USER, fields="id,username")
