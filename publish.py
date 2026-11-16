@@ -101,8 +101,17 @@ def main():
     done = {p["id"] for p in pub}
 
     if MODE == "check":
-        me = call("GET", USER, fields="id,username,account_type")
-        print("Compte :", me)
+        def tryit(label, path, **kw):
+            try:
+                r = call("GET", path, **kw); print(label, ":", r); return r
+            except Exception as e:
+                print(label, ": ÉCHEC", e); return None
+        tryit("Moi", "me", fields="id,name")
+        tryit("Permissions du jeton", "me/permissions")
+        tryit("Pages et comptes Instagram liés", "me/accounts", fields="name,id,instagram_business_account{id,username}")
+        me = tryit("Compte Instagram (IG_USER_ID)", USER, fields="id,username")
+        if not me:
+            sys.exit(1)
         lim = call("GET", f"{USER}/content_publishing_limit", fields="quota_usage,config")
         print("Quota de publication :", lim)
         nxt = [i for i in sched if i["id"] not in done][:3]
